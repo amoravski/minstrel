@@ -1,2 +1,2 @@
-# minstrel_webapp
-The minstrel webapp
+# minstrel
+The minstrel API
