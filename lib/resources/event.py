@@ -1,50 +1,48 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required, get_jwt_claims, fresh_jwt_required, jwt_optional
-from models.item import ItemModel
+from models.event import EventModel
 
 
 """
 The following resources contain endpoints that are protected by jwt,
 one may need a valid access token, a valid fresh token or a valid token with authorized privilege 
-to access each endpoint, details can be found in the README.md doc.  
 """
 
 
-class Item(Resource):
+class Event(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('price',
-                        type=float,
+    parser.add_argument('text',
+                        type=str,
                         required=True,
                         help="This field cannot be left blank!"
                         )
-    parser.add_argument('store_id',
-                        type=int,
+    parser.add_argument('user',
+                        type=str,
                         required=True,
-                        help="Every item needs a store_id."
+                        help="Event needs to be created by user"
                         )
 
-    @jwt_required
-    def get(self, name):
-        item = ItemModel.find_by_name(name)
-        if item:
-            return item.json()
-        return {'message': 'Item not found'}, 404
+    def get(self, title):
+        event = EventModel.find_by_title(title)
+        if event:
+            return event.json()
+        return {'message': 'Event not found'}, 404
 
     @fresh_jwt_required
-    def post(self, name):
-        if ItemModel.find_by_name(name):
-            return {'message': "An item with name '{}' already exists.".format(name)}, 400
+    def post(self, title):
+        if EventModel.find_by_title(title):
+            return {'message': "An Event with name '{}' already exists.".format(title)}, 400
 
         data = self.parser.parse_args()
 
-        item = ItemModel(name, **data)
+        event = EventModel(title, data['text'], data['user'])
 
         try:
-            item.save_to_db()
+            event.save_to_db()
         except:
-            return {"message": "An error occurred while inserting the item."}, 500
+            return {"message": "An error occurred while creating the event."}, 500
 
-        return item.json(), 201
+        return event.json(), 201
 
     @jwt_required
     def delete(self, name):
@@ -52,35 +50,35 @@ class Item(Resource):
         if not claims['is_admin']:
             return {'message': 'Admin privilege required.'}, 401
 
-        item = ItemModel.find_by_name(name)
-        if item:
-            item.delete_from_db()
+        event = EventModel.find_by_title(title)
+        if event:
+            event.delete_from_db()
             return {'message': 'Item deleted.'}
         return {'message': 'Item not found.'}, 404
 
     def put(self, name):
         data = self.parser.parse_args()
 
-        item = ItemModel.find_by_name(name)
+        event = EventModel.find_by_name(name)
 
-        if item:
+        if event:
             item.price = data['price']
         else:
-            item = ItemModel(name, **data)
+            event = ItemModel(name, **data)
 
-        item.save_to_db()
+        event.save_to_db()
 
-        return item.json()
+        return event.json()
 
 
 class EventList(Resource):
     @jwt_optional
     def get(self):
         user_id = get_jwt_identity()
-        items = [item.json() for item in ItemModel.find_all()]
+        events = [event.json() for event in EventModel.find_all()]
         if user_id:
-            return {'items': items}, 200
+            return {'events': events}, 200
         return {
-            'items': [item['name'] for item in items],
+            'items': [event['title'] for event in events],
             'message': 'More data available if you log in.'
 }, 200
