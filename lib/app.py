@@ -4,6 +4,7 @@ from flask_restful import Api
 from mongoengine import connect
 import datetime
 from resources.user import UserRegister, UserLogin, TokenRefresh
+from resources.event import Event, EventList
 from flask_jwt_extended import JWTManager 
 
 app = Flask(__name__)
@@ -65,5 +66,7 @@ api = Api(app)
 api.add_resource(UserRegister, '/register')
 api.add_resource(UserLogin, '/login')
 api.add_resource(TokenRefresh, '/refresh')
+api.add_resource(Event, '/event/<string:title>')
+api.add_resource(EventList, '/event')
 if __name__ == '__main__':
     app.run(debug=True) 
