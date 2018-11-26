@@ -1,16 +1,13 @@
-from pymongo import MongoClient
 from mongoengine import *
 
 class UserModel(Document):
-    __tablename__ = 'users'
-
     email = StringField(required=True)
     username = StringField(required=True, max_length=20)
     password = StringField(required=True)
 
     def json(self):
         return {
-            'id': self.id,
+            'email': self.email,
             'username': self.username
         }
 
