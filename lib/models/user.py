@@ -1,6 +1,7 @@
 from mongoengine import *
 
 class UserModel(Document):
+    meta = {'allow_inheritance':True}
     email = StringField(required=True)
     username = StringField(required=True, max_length=20)
     password = StringField(required=True)
@@ -24,3 +25,10 @@ class UserModel(Document):
 
     def delete_from_db(self):
         self.delete()
+
+
+class PerformerModel(UserModel):
+    tags = ListField(StringField(max_length=20))
+
+class ViewerModel(UserModel):
+    favorites = ListField(StringField(max_length=20))
