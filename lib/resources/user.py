@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_bcrypt import check_password_hash, generate_password_hash
 from pymongo import MongoClient
-from models.user_model import UserModel
+from models.user import ViewerModel, PerformerModel, UserModel
 from flask_jwt_extended import (create_access_token, create_refresh_token,
         jwt_required, jwt_refresh_token_required, get_jwt_identity)
 
@@ -22,7 +22,7 @@ parser.add_argument('password',
                         help="This field cannot be left blank!"
                         )
  
-class UserRegister(Resource):
+class PerformerRegister(Resource):
        def post(self):
         data = parser.parse_args()
 
@@ -32,10 +32,26 @@ class UserRegister(Resource):
             return {"message": "A user with this username already exists"}, 400
 
         password_hash = generate_password_hash(data['password']).decode('utf-8')
-        user = UserModel(data['email'], data['username'], password_hash)
-        user.save_to_db()
+        performer = PerformerModel(data['email'], data['username'], password_hash)
+        performer.save_to_db()
 
-        return {"message": "User created successfully."}, 201
+        return {"status": "ok","message": "Performer created successfully."}, 201
+
+class ViewerRegister(Resource):
+       def post(self):
+        data = parser.parse_args()
+
+        if UserModel.find_by_email(data['email']):
+            return {"message": "A user with this email already exists"}, 400
+        if UserModel.find_by_username(data['username']):
+            return {"message": "A user with this username already exists"}, 400
+
+        password_hash = generate_password_hash(data['password']).decode('utf-8')
+        viewer = ViewerModel(data['email'], data['username'], password_hash)
+        viewer.save_to_db()
+
+        return {"status": "ok","message": "Viewer created successfully."}, 201
+
 
 class UserLogin(Resource):
     def post(self):
@@ -47,7 +63,7 @@ class UserLogin(Resource):
             refresh_token = create_refresh_token(identity=user.email)
             return {'access_token': access_token, 'refresh_token': refresh_token}, 200
         else:
-            return {'message': 'invalid username or password'}, 401
+            return {'status': 'error','message': 'invalid email or password'}, 401
 
 class TokenRefresh(Resource):
     @jwt_refresh_token_required
