@@ -10,6 +10,9 @@ one may need a valid access token, a valid fresh token or a valid token with aut
 
 
 class Event(Resource):
+    """
+        Methods by which events are made possible
+    """
     parser = reqparse.RequestParser()
     parser.add_argument('text',
                         type=str,
@@ -49,16 +52,17 @@ class Event(Resource):
         event = EventModel.find_by_title(title)
         if event:
             event.delete_from_db()
-            return {'message': 'Item deleted.'}
-        return {'message': 'Item not found.'}, 404
+            return {'message': 'Event deleted.'}
+        return {'message': 'Event not found.'}, 404
 
+    #TO-DO: Make put method work
     def put(self, name):
         data = self.parser.parse_args()
 
         event = EventModel.find_by_name(name)
 
         if event:
-            item.price = data['price']
+            event.people = data['price']
         else:
             event = ItemModel(name, **data)
 
