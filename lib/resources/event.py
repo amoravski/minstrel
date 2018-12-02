@@ -16,11 +16,6 @@ class Event(Resource):
                         required=True,
                         help="This field cannot be left blank!"
                         )
-    parser.add_argument('user',
-                        type=str,
-                        required=True,
-                        help="Event needs to be created by user"
-                        )
 
     def get(self, title):
         event = EventModel.find_by_title(title)
@@ -35,7 +30,8 @@ class Event(Resource):
 
         data = self.parser.parse_args()
 
-        event = EventModel(title, data['text'], data['user'])
+        user_id = get_jwt_identity()
+        event = EventModel(title, data['text'], user_id)
 
         try:
             event.save_to_db()
