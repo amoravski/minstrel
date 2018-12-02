@@ -1,12 +1,17 @@
 from mongoengine import *
 
 class UserModel(Document):
+    """
+        The abstract user class
+    """
     meta = {'allow_inheritance':True}
+    
     email = StringField(required=True)
     username = StringField(required=True, max_length=20)
     password = StringField(required=True)
 
     def json(self):
+        """Returns pretty json representation"""
         return {
             'email': self.email,
             'username': self.username
@@ -28,7 +33,13 @@ class UserModel(Document):
 
 
 class PerformerModel(UserModel):
+    """
+        The performer model - be wary, all classmethods only apply to other performers
+    """
     tags = ListField(StringField(max_length=20))
 
 class ViewerModel(UserModel):
+    """
+        The viewer model - be wary, all classmethods only apply to other viewers
+    """
     favorites = ListField(StringField(max_length=20))

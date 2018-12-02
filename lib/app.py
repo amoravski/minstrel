@@ -9,13 +9,22 @@ from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
-# ----------- Bcrypt --------
+
+# ----------- SECURITY ------------
+
+# ----------- Bcrypt
+
 bcrypt = Bcrypt(app)
 
-# ----------- JWT -----------
+# ----------- JWT
+
+# TO-DO: Secret key needs to be actually made secret, get it from enviroment
 app.config['JWT_SECRET_KEY'] = "cute doggie"
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+
 jwt = JWTManager(app)
+
+# Default routes needed for jwt handling
 @jwt.expired_token_loader
 def expired_token_callback():
     return jsonify({
@@ -54,13 +63,20 @@ def revoked_token_callback():
         "description": "The token has been revoked.",
         'error': 'token_revoked'
 }), 401
-# ----------- MONGO ---------
+
+# ----------- DATABASE -----------
+
+# ----------- MONGODB
 app.config["MONGODB_DB"] = 'Minstrel'
 connect(
     'Minstrel'
 )
+#TO-DO: Secret key needs to be secret, move to enviroment
 app.secret_key = 'doggo'
-# ----------- API ------------
+
+# ----------- ROUTES -----------
+
+# ----------- API 
 api = Api(app)
 
 api.add_resource(ViewerRegister, '/register/viewer')
@@ -69,5 +85,9 @@ api.add_resource(UserLogin, '/login')
 api.add_resource(TokenRefresh, '/refresh')
 api.add_resource(Event, '/event/<string:title>')
 api.add_resource(EventList, '/event')
+
+# ------------ MISC ------------
+
+# Runs app if file is called
 if __name__ == '__main__':
     app.run(debug=True) 

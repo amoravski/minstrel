@@ -23,30 +23,36 @@ parser.add_argument('password',
                         )
  
 class PerformerRegister(Resource):
-       def post(self):
+     def post(self):
         data = parser.parse_args()
-
+        
+        # Calls UserModel to search through all users, not just performers
         if UserModel.find_by_email(data['email']):
             return {"message": "A user with this email already exists"}, 400
         if UserModel.find_by_username(data['username']):
             return {"message": "A user with this username already exists"}, 400
 
+        # Bcrypt hash
         password_hash = generate_password_hash(data['password']).decode('utf-8')
+
         performer = PerformerModel(data['email'], data['username'], password_hash)
         performer.save_to_db()
 
         return {"status": "ok","message": "Performer created successfully."}, 201
 
 class ViewerRegister(Resource):
-       def post(self):
+     def post(self):
         data = parser.parse_args()
 
+        # Calls UserModel to search through all users, not just viewers
         if UserModel.find_by_email(data['email']):
             return {"message": "A user with this email already exists"}, 400
         if UserModel.find_by_username(data['username']):
             return {"message": "A user with this username already exists"}, 400
 
+        # Bcrypt hash
         password_hash = generate_password_hash(data['password']).decode('utf-8')
+
         viewer = ViewerModel(data['email'], data['username'], password_hash)
         viewer.save_to_db()
 
