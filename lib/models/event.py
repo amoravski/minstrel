@@ -1,12 +1,16 @@
 from mongoengine import *
 
 class EventModel(Document):
-
+    """
+        Created by performers, for big collaborations or announcments
+    """
+    
     title = StringField(required=True)
     text = StringField(required=True)
     user = StringField(required=True)
 
     def json(self):
+        """Returns pretty json representation"""
         return {
                 "title": self.title,
                 "text": self.text,
