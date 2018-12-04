@@ -2,13 +2,13 @@ from mongoengine import *
 
 class EventModel(Document):
     """
-        Created by performers, for big collaborations or announcments
+        The abstract event class
     """
     
     title = StringField(required=True)
     text = StringField(required=True)
     user = StringField(required=True)
-
+    meta = {'allow_inheritance':True}
     def json(self):
         """Returns pretty json representation"""
         return {
@@ -35,3 +35,18 @@ class EventModel(Document):
 
     def delete_from_db(self):
         self.delete()
+
+class OfferModel(EventModel):
+    """
+        The model for offers made by viewers to performers
+    """
+
+    tags = ListField(StringField(max_length=20))
+    applicants = ListField(StringField(max_length=20))
+
+class PerformanceModel(EventModel):
+    """
+        The model for offers made by performers to viewers
+    """
+    
+    location = StringField()
