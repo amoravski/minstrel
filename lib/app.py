@@ -5,6 +5,7 @@ from mongoengine import connect
 import datetime
 from resources.user import UserLogin, TokenRefresh, PerformerRegister, ViewerRegister
 from resources.event import Event, EventList
+from resources.offer import Offer
 from flask_jwt_extended import JWTManager 
 
 app = Flask(__name__)
@@ -85,6 +86,7 @@ api.add_resource(UserLogin, '/login')
 api.add_resource(TokenRefresh, '/refresh')
 api.add_resource(Event, '/event/<string:title>')
 api.add_resource(EventList, '/event')
+api.add_resource(Offer, '/offer/<string:title>')
 
 # ------------ MISC ------------
 
