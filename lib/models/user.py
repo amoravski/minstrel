@@ -38,6 +38,29 @@ class PerformerModel(UserModel):
     """
     tags = ListField(StringField(max_length=20))
 
+    @staticmethod
+    def is_tag_allowed(tag):
+        acceptable_tags = [
+                "musician",
+                "dancer",
+                "singer",
+                "comedian",
+                "clown",
+                "acrobat",
+                "improviser",
+                "jangleur",
+                "magician",
+                "puppeteer",
+                "artist",
+                "living statue",
+                "mime",
+                "snake-charmer",
+                ]
+        if tag in acceptable_tags:
+            return True
+        else:
+            return False
+
 class ViewerModel(UserModel):
     """
         The viewer model - be wary, all classmethods only apply to other viewers
