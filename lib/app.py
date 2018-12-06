@@ -3,10 +3,11 @@ from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from mongoengine import connect
 import datetime
-from resources.user import UserLogin, TokenRefresh, PerformerRegister, ViewerRegister
+from resources.user import UserLogin, TokenRefresh, PerformerRegister, ViewerRegister, UserLogout, RevokeRefreshToken
 from resources.event import Event, EventList
 from resources.offer import Offer
 from flask_jwt_extended import JWTManager 
+import redis
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -22,8 +23,12 @@ bcrypt = Bcrypt(app)
 # TO-DO: Secret key needs to be actually made secret, get it from enviroment
 app.config['JWT_SECRET_KEY'] = "cute doggie"
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 jwt = JWTManager(app)
+
+revoked_store = redis.StrictRedis(host='localhost', port=6379, db=0,
+decode_responses=True)
 
 # Default routes needed for jwt handling
 @jwt.expired_token_loader
@@ -65,6 +70,14 @@ def revoked_token_callback():
         'error': 'token_revoked'
 }), 401
 
+
+@jwt.token_in_blacklist_loader
+def check_if_token_is_revoked(decrypted_token):
+    jti = decrypted_token['jti']
+    entry = revoked_store.get(jti)
+    if entry is None:
+        return True
+    return entry == 'true'
 # ----------- DATABASE -----------
 
 # ----------- MONGODB
@@ -83,6 +96,8 @@ api = Api(app)
 api.add_resource(ViewerRegister, '/register/viewer')
 api.add_resource(PerformerRegister, '/register/performer')
 api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogout, '/logout')
+api.add_resource(RevokeRefreshToken, '/logout2')
 api.add_resource(TokenRefresh, '/refresh')
 api.add_resource(Event, '/event/<string:title>')
 api.add_resource(EventList, '/event')

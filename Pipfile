@@ -11,6 +11,7 @@ pymongo = "*"
 mongoengine = "*"
 flask-jwt-extended = "*"
 flask-bcrypt = "*"
+redis = "*"
 
 [dev-packages]
 

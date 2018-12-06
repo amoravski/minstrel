@@ -29,12 +29,13 @@ Since Minstrel is free and open-source, everybody is welcome to fork, reuse and 
 - Python
 - Pipenv
 - MongoDB
+- Redis
 
 First make sure python is working on your system, check with
 ```
 python3 -v
 ```
-Configure MongoDB and run it
+Configure MongoDB and Redis and then run them
 
 After cloning the repo, simply run:
 ```
