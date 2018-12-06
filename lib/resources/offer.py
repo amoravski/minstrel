@@ -30,3 +30,12 @@ class Offer(Resource):
             return {"message": "An error occurred while creating the offer."}, 500
 
         return offer.json(), 201
+
+class OfferList(Resource):
+    """
+        Returns a list of all offers
+    """
+
+    def get(self):
+        offers = [offer.json() for offer in OfferModel.find_all()]
+        return {'offers': offers}

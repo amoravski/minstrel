@@ -5,7 +5,7 @@ from mongoengine import connect
 import datetime
 from resources.user import UserLogin, TokenRefresh, PerformerRegister, ViewerRegister, UserLogout, RevokeRefreshToken
 from resources.event import Event, EventList
-from resources.offer import Offer
+from resources.offer import Offer, OfferList
 from flask_jwt_extended import JWTManager 
 import redis
 
@@ -102,6 +102,7 @@ api.add_resource(TokenRefresh, '/refresh')
 api.add_resource(Event, '/event/<string:title>')
 api.add_resource(EventList, '/event')
 api.add_resource(Offer, '/offer/<string:title>')
+api.add_resource(OfferList, '/offer')
 
 # ------------ MISC ------------
 
