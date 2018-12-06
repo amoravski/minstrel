@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required, get_jwt_claims, fresh_jwt_required, jwt_optional
 from models.event import EventModel
-
+from resources.parsers import event_parser
 
 """
 The following resources contain endpoints that are protected by jwt,
@@ -31,7 +31,7 @@ class Event(Resource):
         if EventModel.find_by_title(title):
             return {'message': "An Event with name '{}' already exists.".format(title)}, 400
 
-        data = self.parser.parse_args()
+        data = event_parser.parse_args()
 
         user_id = get_jwt_identity()
         event = EventModel(title, data['text'], user_id)
@@ -57,7 +57,7 @@ class Event(Resource):
 
     #TO-DO: Make put method work
     def put(self, name):
-        data = self.parser.parse_args()
+        data = event_parser.parse_args()
 
         event = EventModel.find_by_name(name)
 

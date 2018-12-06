@@ -4,62 +4,8 @@ from pymongo import MongoClient
 from models.user import ViewerModel, PerformerModel, UserModel
 from flask_jwt_extended import (create_access_token, create_refresh_token,
         jwt_required, jwt_refresh_token_required, get_jwt_identity)
+from resources.parsers import performer_parser, viewer_parser, user_parser
 
-user_parser = reqparse.RequestParser()
-user_parser.add_argument('email',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-user_parser.add_argument('username',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-user_parser.add_argument('password',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-
-performer_parser = reqparse.RequestParser()
-performer_parser.add_argument('email',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-performer_parser.add_argument('username',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-performer_parser.add_argument('password',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-performer_parser.add_argument('tags',
-                        required=True,
-                        help="You must at least choose one category",
-                        action="append"
-                        )
-viewer_parser = reqparse.RequestParser()
-viewer_parser.add_argument('email',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-viewer_parser.add_argument('username',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-viewer_parser.add_argument('password',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
- 
 class PerformerRegister(Resource):
      def post(self):
         data = performer_parser.parse_args()
