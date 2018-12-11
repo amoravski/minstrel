@@ -50,6 +50,16 @@ class PerformerModel(UserModel):
     # Location, stored as lat and lon
     location = GeoPointField()
 
+    # Settings
+    settings = DictField(default={
+        "public_email?": False,
+        "show_location?": False,
+        "recieve_offers?": False,
+        "offer_notifications?": False,
+        "collaborations?": False
+                }
+            )
+
     @staticmethod
     def is_tag_allowed(category):
         acceptable_categories = [
