@@ -3,10 +3,11 @@ from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from mongoengine import connect
 import datetime
-from resources.user import UserLogin, TokenRefresh, PerformerRegister, ViewerRegister, UserLogout, RevokeRefreshToken
+from resources.user import UserLogin, TokenRefresh, PerformerRegister, AdmirerRegister, UserLogout, RevokeRefreshToken
 from resources.event import Event, EventList
 from resources.offer import Offer, OfferList
 from resources.performer import Performer
+from resources.admirer import Admirer
 from flask_jwt_extended import JWTManager 
 import redis
 
@@ -94,7 +95,7 @@ app.secret_key = 'doggo'
 # ----------- API 
 api = Api(app)
 
-api.add_resource(ViewerRegister, '/register/viewer')
+api.add_resource(AdmirerRegister, '/register/admirer')
 api.add_resource(PerformerRegister, '/register/performer')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
@@ -105,6 +106,7 @@ api.add_resource(EventList, '/event')
 api.add_resource(Offer, '/offer/<string:title>')
 api.add_resource(OfferList, '/offer')
 api.add_resource(Performer, '/performer')
+api.add_resource(Admirer, '/admirer')
 
 # ------------ MISC ------------
 

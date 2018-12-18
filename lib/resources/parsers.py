@@ -52,23 +52,31 @@ performer_settings_parser.add_argument('settings',
                         )
 
 
-# The parser for viewer registration
-viewer_parser = reqparse.RequestParser()
-viewer_parser.add_argument('email',
+# The parser for admirer registration
+admirer_parser = reqparse.RequestParser()
+admirer_parser.add_argument('email',
                         type=str,
                         required=True,
                         help="This field cannot be left blank!"
                         )
-viewer_parser.add_argument('username',
+admirer_parser.add_argument('username',
                         type=str,
                         required=True,
                         help="This field cannot be left blank!"
                         )
-viewer_parser.add_argument('password',
+admirer_parser.add_argument('password',
                         type=str,
                         required=True,
                         help="This field cannot be left blank!"
                         )
+
+# The parser for performer settings
+admirer_settings_parser = reqparse.RequestParser()
+admirer_settings_parser.add_argument('settings',
+                        type=dict,
+                        required=True,
+                        )
+
 
 # The parser for events
 event_parser = reqparse.RequestParser()

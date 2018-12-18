@@ -91,8 +91,23 @@ class PerformerModel(UserModel):
         else:
             return False
 
-class ViewerModel(UserModel):
+class AdmirerModel(UserModel):
     """
-        The viewer model - be wary, all classmethods only apply to other viewers
+        The admirer model - be wary, all classmethods only apply to other viewers
     """
+
+    preferences = ListField(StringField(max_length=20))
     favorites = ListField(StringField(max_length=20))
+    contacts = DictField()
+
+    # Media, stored locally
+    profile_picture = StringField()
+ 
+    # Settings
+
+    settings = DictField(default={
+        "public_email?": "false"
+                }
+            )
+
+
