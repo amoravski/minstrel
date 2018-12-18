@@ -91,8 +91,8 @@ class PerformerModel(UserModel):
         else:
             return False
 
-class ViewerModel(UserModel):
+class AdmirerModel(UserModel):
     """
-        The viewer model - be wary, all classmethods only apply to other viewers
+        The admirer model - be wary, all classmethods only apply to other viewers
     """
     favorites = ListField(StringField(max_length=20))
