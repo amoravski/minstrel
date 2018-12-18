@@ -94,3 +94,11 @@ offer_parser.add_argument('text',
                         help="This field cannot be left blank!"
                         )
 
+# The parser for performances
+performance_parser = reqparse.RequestParser()
+performance_parser.add_argument('text',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+
