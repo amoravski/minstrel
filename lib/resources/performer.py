@@ -12,6 +12,9 @@ class Performer(Resource):
     def get(self):
         current_user = get_jwt_identity()
         performer = PerformerModel.find_by_email(current_user)
+        if not performer:
+            return {"status":"error", "message":"User is not performer"}
+        
         return {"status": "ok", "user": performer.json()}, 200
 
     @jwt_required
@@ -19,7 +22,8 @@ class Performer(Resource):
         current_user = get_jwt_identity()
         data = performer_settings_parser.parse_args()
         performer = PerformerModel.find_by_email(current_user)
-
+        if not performer:
+            return {"status":"error", "message":"User is not performer"}
         for setting in performer.settings:
             result = set_setting(performer, setting, data)
             if result['status'] == "ok":
