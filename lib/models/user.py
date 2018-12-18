@@ -95,4 +95,19 @@ class AdmirerModel(UserModel):
     """
         The admirer model - be wary, all classmethods only apply to other viewers
     """
+
+    preferences = ListField(StringField(max_length=20))
     favorites = ListField(StringField(max_length=20))
+    contacts = DictField()
+
+    # Media, stored locally
+    profile_picture = StringField()
+ 
+    # Settings
+
+    settings = DictField(default={
+        "public_email?": "false"
+                }
+            )
+
+
