@@ -70,6 +70,14 @@ admirer_parser.add_argument('password',
                         help="This field cannot be left blank!"
                         )
 
+# The parser for performer settings
+admirer_settings_parser = reqparse.RequestParser()
+admirer_settings_parser.add_argument('settings',
+                        type=dict,
+                        required=True,
+                        )
+
+
 # The parser for events
 event_parser = reqparse.RequestParser()
 event_parser.add_argument('text',
