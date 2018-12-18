@@ -39,11 +39,18 @@ performer_parser.add_argument('password',
                         required=True,
                         help="This field cannot be left blank!"
                         )
-performer_parser.add_argument('tags',
+performer_parser.add_argument('categories',
                         required=True,
                         help="You must at least choose one category",
                         action="append"
                         )
+# The parser for performer settings
+performer_settings_parser = reqparse.RequestParser()
+performer_settings_parser.add_argument('settings',
+                        type=dict,
+                        required=True,
+                        )
+
 
 # The parser for viewer registration
 viewer_parser = reqparse.RequestParser()
