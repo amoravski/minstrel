@@ -36,27 +36,57 @@ class PerformerModel(UserModel):
     """
         The performer model - be wary, all classmethods only apply to other performers
     """
-    tags = ListField(StringField(max_length=20))
+
+    categories = ListField(StringField(max_length=20))
+    description = StringField(max_length=300)
+    performances = ListField(StringField(max_length=20))
+    collaborators = ListField()
+    contacts = DictField()
+    
+    # Media, stored locally
+    profile_picture = StringField()
+    highlights = ListField(StringField())
+    
+    # Location, stored as lat and lon
+    location = GeoPointField()
+
+    # Settings
+    settings = DictField(default={
+        "public_email?": "false",
+        "show_location?": "false",
+        "recieve_offers?": "false",
+        "offer_notifications?": "false",
+        "collaborations?": "false",
+                }
+            )
 
     @staticmethod
-    def is_tag_allowed(tag):
-        acceptable_tags = [
+    def is_category_allowed(category):
+        acceptable_categories = [
                 "musician",
                 "dancer",
                 "singer",
+                "artist",
                 "comedian",
+                "living statue",
+                "one-person band",
+                "mime",
                 "clown",
+                "jongleur",
                 "acrobat",
-                "improviser",
-                "jangleur",
                 "magician",
                 "puppeteer",
-                "artist",
-                "living statue",
-                "mime",
+                "improviser",
+                "charicaturist",
+                "animal tamer",
                 "snake-charmer",
+                "fire eater",
+                "sword swallower",
+                "storyteller",
+                "ensemble",
+                "other",
                 ]
-        if tag in acceptable_tags:
+        if category in acceptable_categories:
             return True
         else:
             return False

@@ -21,14 +21,14 @@ class PerformerRegister(Resource):
         password_hash = generate_password_hash(data['password']).decode('utf-8')
 
         
-        accepted_tags = []
-        for tag in data['tags']:
-            if PerformerModel.is_tag_allowed(tag):
-                accepted_tags.append(tag)
+        accepted_categories = []
+        for category in data['categories']:
+            if PerformerModel.is_category_allowed(category):
+                accepted_categories.append(category)
             else:
                 return {"status": "error", "message": "{} tag not recognized".format(tag)}        
 
-        performer = PerformerModel(data['email'], data['username'], password_hash, accepted_tags)
+        performer = PerformerModel(data['email'], data['username'], password_hash, accepted_categories)
 
         performer.save_to_db()
 
