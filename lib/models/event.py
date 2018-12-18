@@ -50,3 +50,6 @@ class PerformanceModel(EventModel):
     """
     
     location = StringField()
+    performer = StringField()
+    collaborators = ListField(StringField())
+    categories = ListField(StringField())
