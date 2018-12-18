@@ -37,8 +37,8 @@ class PerformerModel(UserModel):
         The performer model - be wary, all classmethods only apply to other performers
     """
 
-    description = StringField(max_length=300)
     categories = ListField(StringField(max_length=20))
+    description = StringField(max_length=300)
     performances = ListField(StringField(max_length=20))
     collaborators = ListField()
     contacts = DictField()
@@ -52,16 +52,16 @@ class PerformerModel(UserModel):
 
     # Settings
     settings = DictField(default={
-        "public_email?": False,
-        "show_location?": False,
-        "recieve_offers?": False,
-        "offer_notifications?": False,
-        "collaborations?": False
+        "public_email?": "false",
+        "show_location?": "false",
+        "recieve_offers?": "false",
+        "offer_notifications?": "false",
+        "collaborations?": "false",
                 }
             )
 
     @staticmethod
-    def is_tag_allowed(category):
+    def is_category_allowed(category):
         acceptable_categories = [
                 "musician",
                 "dancer",
