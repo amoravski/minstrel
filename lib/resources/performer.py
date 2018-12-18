@@ -7,6 +7,13 @@ class Performer(Resource):
     '''
         The performer API
     '''
+    
+    @jwt_required
+    def get(self):
+        current_user = get_jwt_identity()
+        performer = PerformerModel.find_by_email(current_user)
+        return {"status": "ok", "user": performer.json()}, 200
+
     @jwt_required
     def put(self):
         current_user = get_jwt_identity()
