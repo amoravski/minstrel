@@ -7,6 +7,7 @@ from resources.user import UserLogin, TokenRefresh, PerformerRegister, AdmirerRe
 from resources.event import Event, EventList
 from resources.offer import Offer, OfferList
 from resources.performer import Performer
+from resources.admirer import Admirer
 from flask_jwt_extended import JWTManager 
 import redis
 
@@ -105,6 +106,7 @@ api.add_resource(EventList, '/event')
 api.add_resource(Offer, '/offer/<string:title>')
 api.add_resource(OfferList, '/offer')
 api.add_resource(Performer, '/performer')
+api.add_resource(Admirer, '/admirer')
 
 # ------------ MISC ------------
 
