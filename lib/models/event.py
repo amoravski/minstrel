@@ -45,6 +45,7 @@ class OfferModel(EventModel):
     """
 
     size = StringField()
+    type_of_event = StringField()
     requirements = StringField()
     compensation = StringField()
     status = StringField()
