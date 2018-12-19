@@ -8,6 +8,9 @@ class EventModel(Document):
     title = StringField(required=True)
     text = StringField(required=True)
     user = StringField(required=True)
+    location = StringField()
+    date = DateTimeField()
+    categories = ListField(StringField(max_length=20))
     meta = {'allow_inheritance':True}
     def json(self):
         """Returns pretty json representation"""
@@ -41,15 +44,18 @@ class OfferModel(EventModel):
         The model for offers made by viewers to performers
     """
 
-    tags = ListField(StringField(max_length=20))
+    size = StringField()
+    requirements = StringField()
+    compensation = StringField()
+    status = StringField()
     applicants = ListField(StringField(max_length=20))
+    approved_performers = ListField(StringField(max_length=20))
 
 class PerformanceModel(EventModel):
     """
         The model for offers made by performers to viewers
     """
     
-    location = StringField()
     performer = StringField()
     collaborators = ListField(StringField())
     categories = ListField(StringField())
