@@ -93,6 +93,43 @@ offer_parser.add_argument('text',
                         required=True,
                         help="This field cannot be left blank!"
                         )
+offer_parser.add_argument('location',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+offer_parser.add_argument('date',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+offer_parser.add_argument('categories',
+                        required=True,
+                        help="This field cannot be left blank!",
+                        action="append"
+                        )
+offer_parser.add_argument('type',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+offer_parser.add_argument('requirements',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+offer_parser.add_argument('compensation',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+offer_parser.add_argument('size',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+
+
 
 # The parser for performances
 performance_parser = reqparse.RequestParser()

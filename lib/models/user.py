@@ -91,6 +91,17 @@ class PerformerModel(UserModel):
         else:
             return False
 
+    @classmethod
+    def filter_categories(cls, categories):
+        accepted_categories = []
+        for category in categories:
+            if cls.is_category_allowed(category):
+                accepted_categories.append(category)
+            else:
+                return {"status": "error", "message": "'{}' category not recognized".format(category)}
+        return {"status": "ok", "categories": accepted_categories}
+ 
+
 class AdmirerModel(UserModel):
     """
         The admirer model - be wary, all classmethods only apply to other viewers
