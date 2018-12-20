@@ -5,11 +5,11 @@ class EventModel(Document):
         The abstract event class
     """
     
-    title = StringField(required=True)
-    text = StringField(required=True)
-    user = StringField(required=True)
-    location = StringField()
-    date = DateTimeField()
+    title = StringField(required=True, max_length=50)
+    text = StringField(required=True, max_length=500)
+    user = StringField(required=True, max_length=100)
+    location = StringField(max_length=100)
+    date = IntField(max_length=20)
     categories = ListField(StringField(max_length=20))
     meta = {'allow_inheritance':True}
     def json(self):
@@ -43,12 +43,25 @@ class OfferModel(EventModel):
     """
         The model for offers made by viewers to performers
     """
-
-    size = StringField()
-    type_of_event = StringField()
-    requirements = StringField()
-    compensation = StringField()
-    status = StringField()
+    def json(self):
+        return {
+                "title": self.title,
+                "text": self.text,
+                "owner": self.user,
+                "location": self.location,
+                "date": self.date,
+                "categories": self.categories,
+                "size": self.size,
+                "type_of_event": self.type_of_event,
+                "requirements": self.requirements,
+                "compensation": self.compensation,
+                "status": self.status
+                }
+    size = StringField(max_length=20)
+    type_of_event = StringField(max_length=20)
+    requirements = StringField(max_length=300)
+    compensation = StringField(max_length=300)
+    status = StringField(default="Active")
     applicants = ListField(StringField(max_length=20))
     approved_performers = ListField(StringField(max_length=20))
 
