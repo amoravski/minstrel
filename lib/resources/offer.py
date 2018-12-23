@@ -4,6 +4,7 @@ from models.event import OfferModel
 from resources.parsers import offer_parser
 from models.user import PerformerModel, AdmirerModel
 from time import time
+from uuid import uuid4
 
 class Offer(Resource):
     """
@@ -37,7 +38,9 @@ class Offer(Resource):
         if not int(data['date'])>int(time()):
             return {'status': 'error', 'message': 'Date must be in the future'}, 400
         
+        uuid = uuid4()
         offer = OfferModel(
+                uuid,
                 title, 
                 data['text'], 
                 user_id, 
@@ -50,8 +53,11 @@ class Offer(Resource):
                 data['compensation'],
                 )
 
+        admirer = AdmirerModel.find_by_email(user_id)
+        admirer.offers.append(uuid)
         try:
             offer.save_to_db()
+            admirer.save_to_db()
         except Exception as e:
             return {'status': 'error', 'message': 'Something went wrong when processing parameters'}, 500
 
