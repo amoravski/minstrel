@@ -5,6 +5,7 @@ class EventModel(Document):
         The abstract event class
     """
     
+    uuid = UUIDField()
     title = StringField(required=True, max_length=50)
     text = StringField(required=True, max_length=500)
     user = StringField(required=True, max_length=100)
@@ -19,6 +20,10 @@ class EventModel(Document):
                 "text": self.text,
                 "user": self.user
                 }
+
+    @classmethod
+    def find_by_uuid(cls, uuid):
+        return cls.objects(uuid=uuid).first()
 
 
     @classmethod
