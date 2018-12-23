@@ -138,4 +138,14 @@ performance_parser.add_argument('text',
                         required=True,
                         help="This field cannot be left blank!"
                         )
+performance_parser.add_argument('location',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+performance_parser.add_argument('date',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
 
