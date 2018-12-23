@@ -3,11 +3,11 @@ from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from mongoengine import connect
 import datetime
-from resources.user import UserLogin, TokenRefresh, PerformerRegister, AdmirerRegister, UserLogout, RevokeRefreshToken
+from resources.user import UserLogin, TokenRefresh, UserLogout, RevokeRefreshToken
 from resources.offer import Offer, OfferList
 from resources.performance import Performance, PerformanceList
-from resources.performer import Performer
-from resources.admirer import Admirer
+from resources.performer import Performer, PerformerRegister
+from resources.admirer import Admirer, AdmirerRegister
 from flask_jwt_extended import JWTManager 
 import redis
 
