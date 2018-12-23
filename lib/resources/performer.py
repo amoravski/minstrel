@@ -1,3 +1,4 @@
+from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import (jwt_required, get_jwt_identity, jwt_optional)
 from flask_bcrypt import generate_password_hash
@@ -67,6 +68,16 @@ class PerformerRegister(Resource):
         performer.save_to_db()
 
         return {"status": "ok","message": "Performer created successfully."}, 201
+
+class PerformerList(Resource):
+    def get(self):
+        categories = request.args.getlist('categories')
+        performers_json = []
+        for performer in PerformerModel.find_by_categories(categories):
+            performer_no_uuids = performer.json()
+            del performer_no_uuids["performances"]
+            performers_json.append(performer_no_uuids)
+        return {"status": "ok", "performers": performers_json}
 
 def set_setting(performer, setting, data):
     if data['settings'].get(setting, False) and data['settings'].get(setting) in ['true', 'false']:
