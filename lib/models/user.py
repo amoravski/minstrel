@@ -111,7 +111,17 @@ class PerformerModel(UserModel):
             else:
                 return {"status": "error", "message": "'{}' category not recognized".format(category)}
         return {"status": "ok", "categories": accepted_categories}
- 
+
+    @classmethod
+    def find_by_categories(cls, categories):
+        performers = []
+        if categories:
+            for category in categories:
+                for performer in cls.objects().filter(categories=category):
+                    performers.append(performer)
+            return performers
+        else:
+            return cls.objects()
 
 class AdmirerModel(UserModel):
     """
