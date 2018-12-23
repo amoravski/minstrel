@@ -41,7 +41,7 @@ class EventModel(Document):
 
 class OfferModel(EventModel):
     """
-        The model for offers made by viewers to performers
+        The model for offers made by admirers to performers
     """
     def json(self):
         return {
@@ -67,9 +67,16 @@ class OfferModel(EventModel):
 
 class PerformanceModel(EventModel):
     """
-        The model for offers made by performers to viewers
+        The model for performances made by performers to admirers
     """
-    
-    performer = StringField()
-    collaborators = ListField(StringField())
+    def json(self):                                                                           
+        return {
+                "title": self.title,
+                "text": self.text,
+                "performer": self.user,
+                "location": self.location,
+                "date": self.date,
+                "categories": self.categories,
+                }    
     categories = ListField(StringField())
+    collaborators = ListField(StringField())
