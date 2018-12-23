@@ -1,7 +1,9 @@
 from flask_restful import Resource
-from flask_jwt_extended import (jwt_required, get_jwt_identity)
-from models.user import PerformerModel
-from resources.parsers import performer_settings_parser
+from flask_jwt_extended import (jwt_required, get_jwt_identity, jwt_optional)
+from flask_bcrypt import generate_password_hash
+from models.user import UserModel, PerformerModel
+from models.event import PerformanceModel
+from resources.parsers import performer_parser, performer_settings_parser
 from json import loads
 class Performer(Resource):
     '''
@@ -15,7 +17,13 @@ class Performer(Resource):
         if not performer:
             return {"status":"error", "message":"User is not performer"}
         
-        return {"status": "ok", "user": performer.json()}, 200
+        json = performer.json()
+        performances_titles = []
+        for uuid in json['performances']:
+            title = PerformanceModel.find_by_uuid(uuid).title
+            performances_titles.append(title)
+        json['performances'] = performances_titles
+        return {"status": "ok", "user": json}, 200
 
     @jwt_required
     def put(self):
@@ -24,6 +32,8 @@ class Performer(Resource):
         performer = PerformerModel.find_by_email(current_user)
         if not performer:
             return {"status":"error", "message":"User is not performer"}
+
+        #Settings
         for setting in performer.settings:
             result = set_setting(performer, setting, data)
             if result['status'] == "ok":
@@ -34,6 +44,30 @@ class Performer(Resource):
         performer.save()
         return {"status": "ok", "message": "All good"}, 200
     
+class PerformerRegister(Resource):
+    def post(self):
+        data = performer_parser.parse_args()
+
+        # Calls UserModel to search through all users, not just performers
+        if UserModel.find_by_email(data['email']):
+            return {"message": "A user with this email already exists"}, 400
+        if UserModel.find_by_username(data['username']):
+            return {"message": "A user with this username already exists"}, 400
+
+        # Bcrypt hash
+        password_hash = generate_password_hash(data['password']).decode('utf-8')
+
+
+        filter_response = PerformerModel.filter_categories(data['categories'])
+        if filter_response['status'] == "error":
+            return filter_response
+
+        performer = PerformerModel(data['email'], data['username'], password_hash, data['location'], filter_response['categories'])
+
+        performer.save_to_db()
+
+        return {"status": "ok","message": "Performer created successfully."}, 201
+
 def set_setting(performer, setting, data):
     if data['settings'].get(setting, False) and data['settings'].get(setting) in ['true', 'false']:
         performer.settings[setting] = data['settings'][setting]

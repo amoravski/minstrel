@@ -39,6 +39,11 @@ performer_parser.add_argument('password',
                         required=True,
                         help="This field cannot be left blank!"
                         )
+performer_parser.add_argument('location',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
 performer_parser.add_argument('categories',
                         required=True,
                         help="You must at least choose one category",
@@ -69,6 +74,12 @@ admirer_parser.add_argument('password',
                         required=True,
                         help="This field cannot be left blank!"
                         )
+admirer_parser.add_argument('preferred_categories',
+                        required=True,
+                        help="This field cannot be left blank!",
+                        action="append"
+                        )
+
 
 # The parser for performer settings
 admirer_settings_parser = reqparse.RequestParser()

@@ -3,6 +3,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required, get_jwt_claims, f
 from models.event import PerformanceModel
 from models.user import PerformerModel
 from resources.parsers import performance_parser
+from uuid import uuid4
 
 class Performance(Resource):
     """
@@ -27,10 +28,14 @@ class Performance(Resource):
 
         performer_categories = PerformerModel.find_by_email(user_id).categories
 
-        performance = PerformanceModel(title, data['text'], user_id, data['location'], data['date'], performer_categories)
+        uuid = uuid4()
+        performance = PerformanceModel(uuid, title, data['text'], user_id, data['location'], data['date'], performer_categories)
 
+        performer = PerformerModel.find_by_email(user_id)
+        performer.performances.append(uuid)
         try:
             performance.save_to_db()
+            performer.save_to_db()
         except:
             return {"status": "ok","message": "An error occurred while creating the performance."}, 500
 

@@ -37,9 +37,23 @@ class PerformerModel(UserModel):
         The performer model - be wary, all classmethods only apply to other performers
     """
 
+    def json(self):
+        """Returns pretty json representation"""
+        return {
+            'email': self.email,
+            'username': self.username,
+            'description': self.description,
+            'performances': self.performances,
+            'categories': self.categories
+        }
+
+
+    # Location, stored as lat and lon
+    location = StringField()
+
     categories = ListField(StringField(max_length=20))
-    description = StringField(max_length=300)
-    performances = ListField(StringField(max_length=20))
+    description = StringField(max_length=300, default="")
+    performances = ListField(UUIDField())
     collaborators = ListField()
     contacts = DictField()
     
@@ -47,9 +61,6 @@ class PerformerModel(UserModel):
     profile_picture = StringField()
     highlights = ListField(StringField())
     
-    # Location, stored as lat and lon
-    location = GeoPointField()
-
     # Settings
     settings = DictField(default={
         "public_email?": "false",
@@ -106,8 +117,18 @@ class AdmirerModel(UserModel):
     """
         The admirer model - be wary, all classmethods only apply to other viewers
     """
+    def json(self):
+        """Returns pretty json representation"""
+        return {
+            'email': self.email,
+            'username': self.username,
+            'offers': self.offers,
+            'favourites': self.favorites,
+            'preferences': self.preferences
+        }
 
     preferences = ListField(StringField(max_length=20))
+    offers = ListField(UUIDField(max_length=50))
     favorites = ListField(StringField(max_length=20))
     contacts = DictField()
 

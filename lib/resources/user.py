@@ -1,54 +1,11 @@
 from flask_restful import Resource, reqparse
-from flask_bcrypt import check_password_hash, generate_password_hash
 from pymongo import MongoClient
-from models.user import AdmirerModel, PerformerModel, UserModel
+from models.user import UserModel
+from flask_bcrypt import check_password_hash
 from flask_jwt_extended import (create_access_token, create_refresh_token,
         jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt, get_jti)
-from resources.parsers import performer_parser, admirer_parser, user_parser
+from resources.parsers import user_parser
 import redis
-
-class PerformerRegister(Resource):
-     def post(self):
-        data = performer_parser.parse_args()
-        
-        # Calls UserModel to search through all users, not just performers
-        if UserModel.find_by_email(data['email']):
-            return {"message": "A user with this email already exists"}, 400
-        if UserModel.find_by_username(data['username']):
-            return {"message": "A user with this username already exists"}, 400
-
-        # Bcrypt hash
-        password_hash = generate_password_hash(data['password']).decode('utf-8')
-
-        
-        filter_response = PerformerModel.filter_categories(data['categories'])
-        if filter_response['status'] == "error":
-            return filter_response
-
-        performer = PerformerModel(data['email'], data['username'], password_hash, filter_response['categories'])
-
-        performer.save_to_db()
-
-        return {"status": "ok","message": "Performer created successfully."}, 201
-
-class AdmirerRegister(Resource):
-     def post(self):
-        data = admirer_parser.parse_args()
-
-        # Calls UserModel to search through all users, not just admirers
-        if UserModel.find_by_email(data['email']):
-            return {"message": "A user with this email already exists"}, 400
-        if UserModel.find_by_username(data['username']):
-            return {"message": "A user with this username already exists"}, 400
-
-        # Bcrypt hash
-        password_hash = generate_password_hash(data['password']).decode('utf-8')
-
-        admirer = AdmirerModel(data['email'], data['username'], password_hash)
-        admirer.save_to_db()
-
-        return {"status": "ok","message": "Admirer created successfully."}, 201
-
 
 class UserLogin(Resource):
     def post(self):
