@@ -6,7 +6,7 @@ import datetime
 from resources.user import UserLogin, TokenRefresh, UserLogout, RevokeRefreshToken
 from resources.offer import Offer, OfferList
 from resources.performance import Performance, PerformanceList
-from resources.performer import Performer, PerformerRegister
+from resources.performer import Performer, PerformerRegister, PerformerList
 from resources.admirer import Admirer, AdmirerRegister
 from flask_jwt_extended import JWTManager 
 import redis
@@ -107,7 +107,7 @@ api.add_resource(Performance, '/performance/<string:title>')
 api.add_resource(PerformanceList, '/performance')
 api.add_resource(Performer, '/performer')
 api.add_resource(Admirer, '/admirer')
-
+api.add_resource(PerformerList, '/performerlist')
 # ------------ MISC ------------
 
 # Runs app if file is called
