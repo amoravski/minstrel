@@ -11,9 +11,8 @@ class Admirer(Resource):
     '''
     
     @jwt_required
-    def get(self):
-        current_user = get_jwt_identity()
-        admirer = AdmirerModel.find_by_email(current_user)
+    def get(self, username):
+        admirer = AdmirerModel.find_by_username(username)
         if not admirer:
             return {"status":"error", "message":"User is not admirer"}
 
@@ -27,12 +26,32 @@ class Admirer(Resource):
         return {"status": "ok", "user": json}, 200
 
     @jwt_required
-    def put(self):
-        current_user = get_jwt_identity()
+    def patch(self, username):
         data = admirer_settings_parser.parse_args()
-        admirer = AdmirerModel.find_by_email(current_user)
+        admirer = AdmirerModel.find_by_username(username)
         if not admirer:
-            return {"status":"error", "message":"User is not admirer"}
+            return {"status":"error", "message":"No such admirer found"}, 400
+
+        return_message = []
+        #Username
+        if data["username"]:
+            if AdmirerModel.find_by_username(data["username"]):
+                return {"status":"error", "message":"Username taken"}, 400
+            admirer.username = data["username"]
+            return_message.append("username")
+        #Password
+        if data["password"]:
+            password_hash = generate_password_hash(data['password']).decode('utf-8')
+            admirer.password = password_hash
+            return_message.append("password")
+
+        #Preferences
+        if data["preferences"]:
+            filter_response = PerformerModel.filter_categories(data['preferences'])
+            if filter_response['status'] == "error":
+                return filter_response
+            admirer.categories = filter_response["categories"]
+            return_message.append("preferences")
 
         #Settings
         for setting in admirer.settings:
@@ -41,9 +60,10 @@ class Admirer(Resource):
                 admirer = result['admirer']
             else:
                 return result, 400
+            return_message.append("settings")
 
         admirer.save()
-        return {"status": "ok", "message": "All good"}, 200
+        return {"status": "ok", "changed:": return_message}, 200
 
 class AdmirerRegister(Resource):
      def post(self):
