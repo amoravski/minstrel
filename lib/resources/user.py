@@ -22,7 +22,7 @@ class UserLogin(Resource):
             revoked_store.set(access_jti, 'false')
             revoked_store.set(refresh_jti, 'false')
 
-            return {'access_token': access_token, 'refresh_token': refresh_token}, 200
+            return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token}, 200
         else:
             return {'status': 'error','message': 'invalid email or password'}, 401
 
@@ -33,7 +33,7 @@ class UserLogout(Resource):
 decode_responses=True)
         jti = get_raw_jwt()['jti']
         revoked_store.set(jti, 'true')
-        return {"message": "Access token revoked"}, 200
+        return {'status': 'ok', 'message': 'Access token revoked'}, 200
 
 class RevokeRefreshToken(Resource):
     @jwt_refresh_token_required
@@ -42,7 +42,7 @@ class RevokeRefreshToken(Resource):
 decode_responses=True)
         jti = get_raw_jwt()['jti']
         revoked_store.set(jti, 'true')
-        return {"message": "Access token revoked"}, 200
+        return {'status': 'ok', 'message': 'Access token revoked'}, 200
 
 
 class TokenRefresh(Resource):
@@ -50,4 +50,4 @@ class TokenRefresh(Resource):
     def post(self):
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
-        return {'access_token': new_token}, 200
+        return {'status': 'ok', 'access_token': new_token}, 200

@@ -8,13 +8,13 @@ from uuid import uuid4
 
 class Offer(Resource):
     """
-        Methods by which events are made possible
+        Offer API - only get is public
     """
 
     def get(self, title):
         offer = OfferModel.find_by_title(title)
         if offer:
-            return offer.json()
+            return {'status': 'ok', 'offer':offer.json()}, 200
         return {'status': 'error','message': 'Offer not found'}, 404
 
     @fresh_jwt_required
@@ -30,10 +30,10 @@ class Offer(Resource):
         
         try:
             accepted_categories = PerformerModel.filter_categories(data['categories'])
-            if accepted_categories['status'] == "error":
+            if accepted_categories['status'] == 'error':
                 return accepted_categories
         except Exception as e:
-            return {'status':'error', 'message': 'Something went wrong when processing parameters' + str(e)}, 500
+            return {'status':'error', 'message': 'Something went wrong'}, 500
         
         if not int(data['date'])>int(time()):
             return {'status': 'error', 'message': 'Date must be in the future'}, 400
@@ -59,64 +59,71 @@ class Offer(Resource):
             offer.save_to_db()
             admirer.save_to_db()
         except Exception as e:
-            return {'status': 'error', 'message': 'Something went wrong when processing parameters'}, 500
+            return {'status': 'error', 'message': 'Something went wrong'}, 500
 
         return {'status': 'ok','offer':offer.json()}, 201
+
     @fresh_jwt_required
     def patch(self, title):
         offer = OfferModel.find_by_title(title)
-        if not offer:
-            return {'status': 'error', 'message': 'No such offer found'}, 400
+        user = get_jwt_identity()                                                             
 
+        # Check if offer already exists, check if user is owner
+        if not offer or not user == offer.user:
+            return {'status': 'error', 'message': 'No such offer found or user is not owner'}, 400
+
+        # Parse args
         data = offer_setting_parser.parse_args()
         return_message = []
-        #Title
+
+        # Title
         if data['title']:
             if OfferModel.find_by_title(data['title']):
-                return {"status":"error",'message': "An offer with name '{}' already exists.".format(data['title'])}, 400
+                return {'status':'error','message': 'An offer with name "{}" already exists.'.format(data['title'])}, 400
             offer.title = data['title']
             return_message.append('title')
 
-        #Text
+        # Text
         if data['text']:
             offer.text = data['text']
             return_message.append('text')
 
-        #Location
+        # Location
         if data['location']:
             offer.location = data['location']
             return_message.append('location')
 
-        #Date
+        # Date
         if data['date']:
             if not int(data['date'])>int(time()):
                 return {'status': 'error', 'message': 'Date must be in the future'}, 400
             offer.date = data['date']
             return_message.append('date')
 
-        #Categories
-        if data["categories"]:
+        # Categories
+        if data['categories']:
             filter_response = PerformerModel.filter_categories(data['categories'])
-            if filter_response['status'] == "error":
+            if filter_response['status'] == 'error':
                 return filter_response
-            offer.categories = filter_response["categories"]
-            return_message.append("categories")
-        #Type
+            offer.categories = filter_response['categories']
+            return_message.append('categories')
+
+        # Type
         if data['type']:
             offer.location = data['type']
             return_message.append('type')
 
-        #Requirements
+        # Requirements
         if data['requirements']:
             offer.location = data['requirements']
             return_message.append('requirements')
 
-        #Compensation
+        # Compensation
         if data['compensation']:
             offer.location = data['compensation']
             return_message.append('compensation')
 
-        #Size
+        # Size
         if data['size']:
             offer.location = data['size']
             return_message.append('size')
@@ -124,13 +131,13 @@ class Offer(Resource):
         try:
             offer.save()
         except:
-            return {"status": "error","message": "An error occurred while creating the offer."}, 500
+            return {'status': 'error','message': 'Something went wrong'}, 500
 
         return {'status':'ok', 'changed:': return_message}
 
 class OfferList(Resource):
     """
-        Returns a list of all offers
+        Returns a list of offers, only GET is allowed
     """
 
     def get(self):

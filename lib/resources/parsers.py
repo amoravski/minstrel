@@ -4,7 +4,7 @@ from flask_restful import reqparse
     Contains all the different request parsers
 """
 
-# The parser for any type of user
+# The parser for any type of user, used for logins
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('email',
                         type=str,
@@ -94,8 +94,7 @@ admirer_parser.add_argument('preferred_categories',
                         action="append"
                         )
 
-
-# The parser for performer settings
+# The parser for admirer settings
 admirer_settings_parser = reqparse.RequestParser()
 admirer_settings_parser.add_argument('username',
                         type=str,
@@ -108,14 +107,6 @@ admirer_settings_parser.add_argument('preferences',
                         )
 admirer_settings_parser.add_argument('settings',
                         type=dict,
-                        )
-
-# The parser for events
-event_parser = reqparse.RequestParser()
-event_parser.add_argument('text',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
                         )
 
 # The parser for offers
@@ -161,7 +152,7 @@ offer_parser.add_argument('size',
                         help="This field cannot be left blank!"
                         )
 
-# The parser for offers
+# The parser for offer settings
 offer_setting_parser = reqparse.RequestParser()
 offer_setting_parser.add_argument('title',
                         type=str,
@@ -210,7 +201,7 @@ performance_parser.add_argument('date',
                         help="This field cannot be left blank!"
                         )
 
-# The parser for performance changes
+# The parser for performance settings
 performance_setting_parser = reqparse.RequestParser()
 performance_setting_parser.add_argument('title',
                         type=str

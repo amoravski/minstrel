@@ -4,11 +4,13 @@ class UserModel(Document):
     """
         The abstract user class
     """
-    meta = {'allow_inheritance':True}
-    
+    # Common properties   
     email = StringField(required=True)
     username = StringField(required=True, max_length=20)
     password = StringField(required=True)
+
+    # Allow inheritance
+    meta = {'allow_inheritance':True}
 
     def json(self):
         """Returns pretty json representation"""
@@ -51,8 +53,10 @@ class PerformerModel(UserModel):
     # Location, stored as lat and lon
     location = StringField()
 
+    # Other properties
     categories = ListField(StringField(max_length=20))
-    description = StringField(max_length=300, default="")
+    description = StringField(max_length=300, default='')
+
     performances = ListField(UUIDField())
     collaborators = ListField()
     contacts = DictField()
@@ -63,39 +67,39 @@ class PerformerModel(UserModel):
     
     # Settings
     settings = DictField(default={
-        "public_email?": "false",
-        "show_location?": "false",
-        "recieve_offers?": "false",
-        "offer_notifications?": "false",
-        "collaborations?": "false",
+        'public_email?': 'false',
+        'show_location?': 'false',
+        'recieve_offers?': 'false',
+        'offer_notifications?': 'false',
+        'collaborations?': 'false',
                 }
             )
 
     @staticmethod
     def is_category_allowed(category):
         acceptable_categories = [
-                "musician",
-                "dancer",
-                "singer",
-                "artist",
-                "comedian",
-                "living statue",
-                "one-person band",
-                "mime",
-                "clown",
-                "jongleur",
-                "acrobat",
-                "magician",
-                "puppeteer",
-                "improviser",
-                "charicaturist",
-                "animal tamer",
-                "snake-charmer",
-                "fire eater",
-                "sword swallower",
-                "storyteller",
-                "ensemble",
-                "other",
+                'musician',
+                'dancer',
+                'singer',
+                'artist',
+                'comedian',
+                'living statue',
+                'one-person band',
+                'mime',
+                'clown',
+                'jongleur',
+                'acrobat',
+                'magician',
+                'puppeteer',
+                'improviser',
+                'charicaturist',
+                'animal tamer',
+                'snake-charmer',
+                'fire eater',
+                'sword swallower',
+                'storyteller',
+                'ensemble',
+                'other',
                 ]
         if category in acceptable_categories:
             return True
@@ -104,39 +108,40 @@ class PerformerModel(UserModel):
 
     @classmethod
     def filter_categories(cls, categories):
+        """
+            Checks if all categories in given list are valid,
+            returns either an error message or the list of approved categories
+        """
         accepted_categories = []
         for category in categories:
             if cls.is_category_allowed(category):
                 accepted_categories.append(category)
             else:
-                return {"status": "error", "message": "'{}' category not recognized".format(category)}
-        return {"status": "ok", "categories": accepted_categories}
+                return {'status': 'error', 'message': '"{}" category not recognized'.format(category)}
+        return {'status': 'ok', 'categories': accepted_categories}
 
     @classmethod
     def find_by_categories(cls, categories):
+        """
+            Finds performers by category
+        """
         performers = []
-        if categories:
-            for category in categories:
-                for performer in cls.objects().filter(categories=category):
-                    performers.append(performer)
-            return performers
-        else:
-            return cls.objects()
+        for category in categories:
+            for performer in cls.objects().filter(categories=category):
+                performers.append(performer)
+        
+        return performers
+
+    @classmethod
+    def find_all(cls):
+        return cls.objects.all()
 
 class AdmirerModel(UserModel):
     """
         The admirer model - be wary, all classmethods only apply to other viewers
     """
-    def json(self):
-        """Returns pretty json representation"""
-        return {
-            'email': self.email,
-            'username': self.username,
-            'offers': self.offers,
-            'favourites': self.favorites,
-            'preferences': self.preferences
-        }
 
+    # Common properties
     preferences = ListField(StringField(max_length=20))
     offers = ListField(UUIDField(max_length=50))
     favorites = ListField(StringField(max_length=20))
@@ -146,10 +151,17 @@ class AdmirerModel(UserModel):
     profile_picture = StringField()
  
     # Settings
-
     settings = DictField(default={
-        "public_email?": "false"
+        'public_email?': 'false'
                 }
             )
 
-
+    def json(self):
+        """Returns pretty json representation"""
+        return {
+            'email': self.email,
+            'username': self.username,
+            'offers': self.offers,
+            'favourites': self.favorites,
+            'preferences': self.preferences
+        }

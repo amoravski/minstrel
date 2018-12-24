@@ -5,6 +5,7 @@ class EventModel(Document):
         The abstract event class
     """
     
+    # Common Properties
     uuid = UUIDField()
     title = StringField(required=True, max_length=50)
     text = StringField(required=True, max_length=500)
@@ -12,7 +13,10 @@ class EventModel(Document):
     location = StringField(max_length=100)
     date = IntField(max_length=20)
     categories = ListField(StringField(max_length=20))
+
+    # Allow inheritance
     meta = {'allow_inheritance':True}
+
     def json(self):
         """Returns pretty json representation"""
         return {
@@ -48,39 +52,46 @@ class OfferModel(EventModel):
     """
         The model for offers made by admirers to performers
     """
-    def json(self):
-        return {
-                "title": self.title,
-                "text": self.text,
-                "owner": self.user,
-                "location": self.location,
-                "date": self.date,
-                "categories": self.categories,
-                "size": self.size,
-                "type_of_event": self.type_of_event,
-                "requirements": self.requirements,
-                "compensation": self.compensation,
-                "status": self.status
-                }
+
     size = StringField(max_length=20)
     type_of_event = StringField(max_length=20)
     requirements = StringField(max_length=300)
     compensation = StringField(max_length=300)
-    status = StringField(default="Active")
+    status = StringField(default='Active')
     applicants = ListField(StringField(max_length=20))
     approved_performers = ListField(StringField(max_length=20))
+
+    def json(self):
+        """Returns pretty json representation"""
+        return {
+                'title': self.title,
+                'text': self.text,
+                'owner': self.user,
+                'location': self.location,
+                'date': self.date,
+                'categories': self.categories,
+                'size': self.size,
+                'type_of_event': self.type_of_event,
+                'requirements': self.requirements,
+                'compensation': self.compensation,
+                'status': self.status
+                }
 
 class PerformanceModel(EventModel):
     """
         The model for performances made by performers to admirers
     """
-    def json(self):                                                                           
-        return {
-                "title": self.title,
-                "text": self.text,
-                "performer": self.user,
-                "location": self.location,
-                "date": self.date,
-                "categories": self.categories,
-                }    
+
     collaborators = ListField(StringField())
+
+    def json(self):                                                                           
+        """Returns pretty json representation"""
+        return {
+                'title': self.title,
+                'text': self.text,
+                'performer': self.user,
+                'location': self.location,
+                'date': self.date,
+                'categories': self.categories,
+                }    
+ 

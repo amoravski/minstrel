@@ -23,12 +23,13 @@ bcrypt = Bcrypt(app)
 # ----------- JWT
 
 # TO-DO: Secret key needs to be actually made secret, get it from enviroment
-app.config['JWT_SECRET_KEY'] = "cute doggie"
+app.config['JWT_SECRET_KEY'] = 'cute doggie'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 jwt = JWTManager(app)
 
+# Redis storage for jwt status
 revoked_store = redis.StrictRedis(host='localhost', port=6379, db=0,
 decode_responses=True)
 
@@ -36,41 +37,41 @@ decode_responses=True)
 @jwt.expired_token_loader
 def expired_token_callback():
     return jsonify({
+        'status': 'error',
         'message': 'The token has expired.',
-        'error': 'token_expired'
     }), 401
 
 
 @jwt.invalid_token_loader
 def invalid_token_callback(error):  # we have to keep the argument here, since it's passed in by the caller internally
     return jsonify({
+        'status': 'error',
         'message': 'Signature verification failed.',
-        'error': 'invalid_token'
     }), 401
 
 
 @jwt.unauthorized_loader
 def missing_token_callback(error):
     return jsonify({
-        "description": "Request does not contain an access token.",
-        'error': 'authorization_required'
+        'status': 'error',
+        'message': 'Request does not contain an access token.',
     }), 401
 
 
 @jwt.needs_fresh_token_loader
 def token_not_fresh_callback():
     return jsonify({
-        "description": "The token is not fresh.",
-        'error': 'fresh_token_required'
+        'status': 'error',
+        'message': 'The token is not fresh.',
     }), 401
 
 
 @jwt.revoked_token_loader
 def revoked_token_callback():
     return jsonify({
-        "description": "The token has been revoked.",
-        'error': 'token_revoked'
-}), 401
+        'status': 'error',
+        'message': 'The token has been revoked.',
+    }), 401
 
 
 @jwt.token_in_blacklist_loader
@@ -83,7 +84,7 @@ def check_if_token_is_revoked(decrypted_token):
 # ----------- DATABASE -----------
 
 # ----------- MONGODB
-app.config["MONGODB_DB"] = 'Minstrel'
+app.config['MONGODB_DB'] = 'Minstrel'
 connect(
     'Minstrel'
 )
