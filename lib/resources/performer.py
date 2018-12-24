@@ -12,9 +12,8 @@ class Performer(Resource):
     '''
     
     @jwt_required
-    def get(self):
-        current_user = get_jwt_identity()
-        performer = PerformerModel.find_by_email(current_user)
+    def get(self, username):
+        performer = PerformerModel.find_by_username(username)
         if not performer:
             return {"status":"error", "message":"User is not performer"}
         
@@ -27,23 +26,51 @@ class Performer(Resource):
         return {"status": "ok", "user": json}, 200
 
     @jwt_required
-    def put(self):
-        current_user = get_jwt_identity()
-        data = performer_settings_parser.parse_args()
-        performer = PerformerModel.find_by_email(current_user)
+    def patch(self, username):
+        performer = PerformerModel.find_by_username(username)
         if not performer:
             return {"status":"error", "message":"User is not performer"}
+        
+        data = performer_settings_parser.parse_args()
+        return_message = []
+        #Username
+        if data["username"]:
+            if PerformerModel.find_by_username(data["username"]):
+                return {"status":"error", "message":"Username taken"}
+            performer.username = data["username"]
+            return_message.append("username")
+        #Password
+        if data["password"]:
+            password_hash = generate_password_hash(data['password']).decode('utf-8')
+            performer.password = password_hash
+            return_message.append("password")
+
+        #Categories
+        if data["categories"]:
+            filter_response = PerformerModel.filter_categories(data['categories'])
+            if filter_response['status'] == "error":
+                return filter_response
+            performer.categories = filter_response["categories"]
+            return_message.append("categories")
+
+
+        #Description
+        if data['description']:
+            performer.description = data['description']
+            return_message.append("description")
 
         #Settings
-        for setting in performer.settings:
-            result = set_setting(performer, setting, data)
-            if result['status'] == "ok":
-                performer = result['performer']
-            else:
-                return result, 400
+        if data["settings"]:
+            for setting in performer.settings:
+                result = set_setting(performer, setting, data)
+                if result['status'] == "ok":
+                    performer = result['performer']
+                else:
+                    return result, 400
+            return_message.append("settings")
 
         performer.save()
-        return {"status": "ok", "message": "All good"}, 200
+        return {"status": "ok", "changed:": return_message}, 200
     
 class PerformerRegister(Resource):
     def post(self):
