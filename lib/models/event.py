@@ -83,5 +83,4 @@ class PerformanceModel(EventModel):
                 "date": self.date,
                 "categories": self.categories,
                 }    
-    categories = ListField(StringField())
     collaborators = ListField(StringField())
