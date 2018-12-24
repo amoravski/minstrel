@@ -8,14 +8,14 @@ from time import time
 
 class Performance(Resource):
     """
-        Methods by which events are made possible
+        Performance API - only GET method is public
     """
 
     def get(self, title):
         performance = PerformanceModel.find_by_title(title)
         if performance:
-            return performance.json()
-        return {'message': 'Performance not found'}, 404
+            return {'status':'ok', 'performer': performance.json()}
+        return {'status': 'error', 'message': 'Performance not found'}, 404
 
     @fresh_jwt_required
     def post(self, title):
@@ -23,7 +23,7 @@ class Performance(Resource):
         if not PerformerModel.find_by_email(user_id):
             return {'status': 'error', 'message': 'Only performers can make performances'}, 400
         if PerformanceModel.find_by_title(title):
-            return {"status":"error",'message': "An Performance with name '{}' already exists.".format(title)}, 400
+            return {'status':'error','message': 'An Performance with name "{}" already exists.'.format(title)}, 400
 
         data = performance_parser.parse_args()
 
@@ -41,36 +41,41 @@ class Performance(Resource):
             performance.save_to_db()
             performer.save_to_db()
         except:
-            return {"status": "error","message": "An error occurred while creating the performance."}, 500
+            return {'status': 'error','message': 'Something went wrong'}, 500
 
-        return {"status": "ok", "performer": performance.json()}, 201
+        return {'status': 'ok', 'performer': performance.json()}, 201
 
     @fresh_jwt_required
     def patch(self, title):
         performance = PerformanceModel.find_by_title(title)
-        if not performance:
-            return {'status': 'error', 'message': 'No such performance found'}, 400
+        user = get_jwt_identity()                                                             
 
+        # Check if performance already exists, check if user is owner
+        if not performance or not user == performance.user:
+            return {'status': 'error', 'message': 'No such performance found or user is not owner'}, 400
+
+        # Parse args
         data = performance_setting_parser.parse_args()
         return_message = []
-        #Title
+
+        # Title
         if data['title']:
             if PerformanceModel.find_by_title(data['title']):
-                return {"status":"error",'message': "An Performance with name '{}' already exists.".format(data['title'])}, 400
+                return {'status': 'error','message': 'An Performance with name "{}" already exists.'.format(data['title'])}, 400
             performance.title = data['title']
             return_message.append('title')
 
-        #Text
+        # Text
         if data['text']:
             performance.text = data['text']
             return_message.append('text')
 
-        #Location
+        # Location
         if data['location']:
             performance.location = data['location']
             return_message.append('location')
             
-        #Date
+        # Date
         if data['date']:
             if not int(data['date'])>int(time()):
                 return {'status': 'error', 'message': 'Date must be in the future'}, 400
@@ -80,15 +85,15 @@ class Performance(Resource):
         try:
             performance.save()
         except:
-            return {"status": "error","message": "An error occurred while creating the performance."}, 500
+            return {'status': 'error','message': 'Something went wrong'}, 500
 
         return {'status':'ok', 'changed:': return_message}
 
 class PerformanceList(Resource):
     """
-        Returns a list of all performances
+        Returns a list of all performances, only GET is allowed
     """
 
     def get(self):
         performances = [performance.json() for performance in PerformanceModel.find_all()]
-        return {'performances': performances}
+        return {'status':'ok', 'performances': performances}
