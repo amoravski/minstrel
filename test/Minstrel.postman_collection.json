@@ -1,0 +1,672 @@
+{
+	"info": {
+		"_postman_id": "fcb0dcf9-b4a9-4700-9671-5abffccb0c13",
+		"name": "Minstrel",
+		"description": "All possible requests to the minstrel back-end.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "performance",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"How about that minstrel app, eh?\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/performance/Lonely-Guitar",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performance",
+						"Lonely-Guitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performance_make",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{performer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Just some of my crossroad blues for a rainy day\",\n\t\"location\":\"Sofia, Bulgaria\",\n\t\"date\":\"1545929663\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/performance/Lonely-Guitar",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performance",
+						"Lonely-Guitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performance_change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{performer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Not-So-Lonely-Guitar\",\n\t\"text\": \"Don't make deals at the crossroads\",\n\t\"location\":\"Sofia, HELL\",\n\t\"date\":\"1549329663\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/performance/Lonely-Guitar",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performance",
+						"Lonely-Guitar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performance_list",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/performance",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "offer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"How about that minstrel app, eh?\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/offer/Company-Party",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"offer",
+						"Company-Party"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "offer_make",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admirer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"A company party to celebrate the end of Q1\",\n\t\"location\": \"Sofia, Bulgaria\",\n\t\"date\": \"1545929663\",\n\t\"categories\":[\"dancer\", \"musician\"],\n\t\"type\": \"Party\",\n\t\"requirements\": \"Guitar, banjo is a plus\",\n\t\"compensation\": \"100$\",\n\t\"size\": \"Medium\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/offer/Company-Party",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"offer",
+						"Company-Party"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "offer_change",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admirer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Company-and-dogs-Party\",\n\t\"text\": \"Turns out, HR is getting us a regimen of dogs\",\n\t\"location\":\"Sofia, Dogs\",\n\t\"date\":\"1549329663\",\n\t\"categories\":[\"artist\", \"musician\", \"animal tamer\"],\n\t\"type\": \"Dog-Party\",\n\t\"requirements\": \"Guitar, banjo is a plus, dog treats\",\n\t\"compensation\": \"FREE for all doggos\",\n\t\"size\": \"Large\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/offer/Company-Party",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"offer",
+						"Company-Party"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "offer_list",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/offer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"offer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performer_self_get",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{performer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"settings\": {\"public_email?\": \"false\", \"recieve_offers?\": \"true\", \"show_location?\": \"false\", \"offer_notifications?\": \"true\", \"collaborations?\":\"false\"}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/performer/cutiepie",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performer",
+						"cutiepie"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performer_register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"boyana@somemail.com\",\n\t\"username\":\"cutiepie\",\n\t\"password\":\"professionalthings\",\n\t\"location\":\"Bulgaria\",\n\t\"categories\":[\"dancer\", \"musician\"]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register/performer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register",
+						"performer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performer_settings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{performer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"boyanaqt\",\n\t\"password\": \"quitesexy\",\n\t\"description\": \"Wow, this is pretty new\",\n\t\"categories\":[\"dancer\", \"musician\", \"artist\"],\n\t\"settings\": {\"public_email?\": \"true\", \"recieve_offers?\": \"true\", \"show_location?\": \"false\", \"offer_notifications?\": \"true\", \"collaborations?\":\"false\"}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/performer/cutiepie",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performer",
+						"cutiepie"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performer_list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{url}}/performer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"performer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "performer_login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"boyana@somemail.com\",\n\t\"username\":\"boyana\",\n\t\"password\":\"professionalthings\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admirer_self_get",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admirer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"settings\": {\"public_email?\": \"true\"}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/admirer/alexander",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admirer",
+						"alexander"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admirer_register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"alexander@somemail.com\",\n\t\"username\":\"alexander\",\n\t\"password\":\"bbiqt\",\n\t\"preferred_categories\":[\"dancer\", \"musician\"]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register/admirer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register",
+						"admirer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admirer_settings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{admirer_access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"Alexander_the_second\",\n\t\"password\": \"Metroid\",\n\t\"preferences\":[\"dancer\", \"musician\", \"artist\"],\n\t\"settings\": {\"public_email?\": \"true\"}\n}"
+				},
+				"url": {
+					"raw": "{{url}}/admirer/alexander",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"admirer",
+						"alexander"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admirer_login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"alexander@somemail.com\",\n\t\"username\":\"alexander\",\n\t\"password\":\"bbiqt\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "access_token_revoke",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/logout",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh_token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"How about that minstrel app, eh?\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/refresh",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh_token_revoke",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/logout2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logout2"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NDUyMjkzMzIsIm5iZiI6MTU0NTIyOTMzMiwianRpIjoiZmYzOGIxOGYtYWExNS00M2UxLWE3M2YtMThlYzdjNTQ3MTYxIiwiZXhwIjoxNTQ1MzE1NzMyLCJpZGVudGl0eSI6ImFsZXhhbmRlckBzb21lbWFpbC5jb20iLCJmcmVzaCI6dHJ1ZSwidHlwZSI6ImFjY2VzcyJ9.NslS2SwpbCFIYJejoFoTN0YXa7zgWJP931HOs1hIwu8",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "111876da-76b2-4c44-84ca-eb8d90d9bc59",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c5f077dc-a986-4fa9-893b-9eaf14381a32",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
