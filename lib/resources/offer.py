@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required, get_jwt_claims, fresh_jwt_required, jwt_optional
 from models.event import OfferModel
-from resources.parsers import offer_parser
+from resources.parsers import offer_parser, offer_setting_parser
 from models.user import PerformerModel, AdmirerModel
 from time import time
 from uuid import uuid4
@@ -61,7 +61,72 @@ class Offer(Resource):
         except Exception as e:
             return {'status': 'error', 'message': 'Something went wrong when processing parameters'}, 500
 
-        return offer.json(), 201
+        return {'status': 'ok','offer':offer.json()}, 201
+    @fresh_jwt_required
+    def patch(self, title):
+        offer = OfferModel.find_by_title(title)
+        if not offer:
+            return {'status': 'error', 'message': 'No such offer found'}, 400
+
+        data = offer_setting_parser.parse_args()
+        return_message = []
+        #Title
+        if data['title']:
+            if OfferModel.find_by_title(data['title']):
+                return {"status":"error",'message': "An offer with name '{}' already exists.".format(data['title'])}, 400
+            offer.title = data['title']
+            return_message.append('title')
+
+        #Text
+        if data['text']:
+            offer.text = data['text']
+            return_message.append('text')
+
+        #Location
+        if data['location']:
+            offer.location = data['location']
+            return_message.append('location')
+
+        #Date
+        if data['date']:
+            if not int(data['date'])>int(time()):
+                return {'status': 'error', 'message': 'Date must be in the future'}, 400
+            offer.date = data['date']
+            return_message.append('date')
+
+        #Categories
+        if data["categories"]:
+            filter_response = PerformerModel.filter_categories(data['categories'])
+            if filter_response['status'] == "error":
+                return filter_response
+            offer.categories = filter_response["categories"]
+            return_message.append("categories")
+        #Type
+        if data['type']:
+            offer.location = data['type']
+            return_message.append('type')
+
+        #Requirements
+        if data['requirements']:
+            offer.location = data['requirements']
+            return_message.append('requirements')
+
+        #Compensation
+        if data['compensation']:
+            offer.location = data['compensation']
+            return_message.append('compensation')
+
+        #Size
+        if data['size']:
+            offer.location = data['size']
+            return_message.append('size')
+
+        try:
+            offer.save()
+        except:
+            return {"status": "error","message": "An error occurred while creating the offer."}, 500
+
+        return {'status':'ok', 'changed:': return_message}
 
 class OfferList(Resource):
     """
@@ -70,4 +135,4 @@ class OfferList(Resource):
 
     def get(self):
         offers = [offer.json() for offer in OfferModel.find_all()]
-        return {'offers': offers}
+        return {'status':'ok','offers': offers}

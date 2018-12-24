@@ -49,13 +49,27 @@ performer_parser.add_argument('categories',
                         help="You must at least choose one category",
                         action="append"
                         )
+
 # The parser for performer settings
 performer_settings_parser = reqparse.RequestParser()
+performer_settings_parser.add_argument('username',
+                        type=str,
+                        )
+performer_settings_parser.add_argument('password',
+                        type=str,
+                        )
+performer_settings_parser.add_argument('categories',
+                        action="append"
+                        )
 performer_settings_parser.add_argument('settings',
                         type=dict,
-                        required=True,
                         )
-
+performer_settings_parser.add_argument('location',
+                        type=str,
+                        )
+performer_settings_parser.add_argument('description',
+                        type=str,
+                        )
 
 # The parser for admirer registration
 admirer_parser = reqparse.RequestParser()
@@ -83,11 +97,18 @@ admirer_parser.add_argument('preferred_categories',
 
 # The parser for performer settings
 admirer_settings_parser = reqparse.RequestParser()
+admirer_settings_parser.add_argument('username',
+                        type=str,
+                        )
+admirer_settings_parser.add_argument('password',
+                        type=str,
+                        )
+admirer_settings_parser.add_argument('preferences',
+                        action="append"
+                        )
 admirer_settings_parser.add_argument('settings',
                         type=dict,
-                        required=True,
                         )
-
 
 # The parser for events
 event_parser = reqparse.RequestParser()
@@ -140,6 +161,35 @@ offer_parser.add_argument('size',
                         help="This field cannot be left blank!"
                         )
 
+# The parser for offers
+offer_setting_parser = reqparse.RequestParser()
+offer_setting_parser.add_argument('title',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('text',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('location',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('date',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('categories',
+                        action="append"
+                        )
+offer_setting_parser.add_argument('type',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('requirements',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('compensation',
+                        type=str,
+                        )
+offer_setting_parser.add_argument('size',
+                        type=str,
+                        )
 
 
 # The parser for performances
@@ -158,5 +208,21 @@ performance_parser.add_argument('date',
                         type=str,
                         required=True,
                         help="This field cannot be left blank!"
+                        )
+
+# The parser for performance changes
+performance_setting_parser = reqparse.RequestParser()
+performance_setting_parser.add_argument('title',
+                        type=str
+                        )
+
+performance_setting_parser.add_argument('text',
+                        type=str
+                        )
+performance_setting_parser.add_argument('location',
+                        type=str
+                        )
+performance_setting_parser.add_argument('date',
+                        type=str
                         )
 

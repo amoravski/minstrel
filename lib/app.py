@@ -105,9 +105,9 @@ api.add_resource(Offer, '/offer/<string:title>')
 api.add_resource(OfferList, '/offer')
 api.add_resource(Performance, '/performance/<string:title>')
 api.add_resource(PerformanceList, '/performance')
-api.add_resource(Performer, '/performer')
-api.add_resource(Admirer, '/admirer')
-api.add_resource(PerformerList, '/performerlist')
+api.add_resource(Performer, '/performer/<string:username>')
+api.add_resource(PerformerList, '/performer')
+api.add_resource(Admirer, '/admirer/<string:username>')
 # ------------ MISC ------------
 
 # Runs app if file is called
