@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask, jsonify, send_from_directory
 from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from mongoengine import connect
@@ -11,8 +12,17 @@ from resources.admirer import Admirer, AdmirerRegister
 from flask_jwt_extended import JWTManager 
 import redis
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../front_end/build')
 app.config['PROPAGATE_EXCEPTIONS'] = True
+
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists("../front_end/build/" + path):
+        return send_from_directory('../front_end/build', path)
+    else:
+        return send_from_directory('../front_end/build', 'index.html')
 
 # ----------- SECURITY ------------
 
