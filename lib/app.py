@@ -33,7 +33,7 @@ bcrypt = Bcrypt(app)
 # ----------- JWT
 
 # TO-DO: Secret key needs to be actually made secret, get it from enviroment
-app.config['JWT_SECRET_KEY'] = 'cute doggie'
+app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -98,8 +98,8 @@ app.config['MONGODB_DB'] = 'Minstrel'
 connect(
     'Minstrel'
 )
-#TO-DO: Secret key needs to be secret, move to enviroment
-app.secret_key = 'doggo'
+
+app.secret_key = os.environ['SECRET_KEY']
 
 # ----------- ROUTES -----------
 
