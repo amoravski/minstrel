@@ -13,8 +13,6 @@ user_parser.add_argument('email',
                         )
 user_parser.add_argument('username',
                         type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
                         )
 user_parser.add_argument('password',
                         type=str,
