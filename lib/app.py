@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+import os
+from flask import Flask, jsonify, send_from_directory
 from flask_bcrypt import Bcrypt
 from flask_restful import Api
 from flask_cors import CORS
@@ -13,8 +14,17 @@ from resources.performance import Performance, PerformanceList
 from resources.performer import Performer, PerformerRegister, PerformerList
 from resources.admirer import Admirer, AdmirerRegister
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../front_end/build')
 app.config['PROPAGATE_EXCEPTIONS'] = True
+
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists("../front_end/build/" + path):
+        return send_from_directory('../front_end/build', path)
+    else:
+        return send_from_directory('../front_end/build', 'index.html')
 
 # ----------- SECURITY ------------
 
@@ -29,7 +39,7 @@ bcrypt = Bcrypt(app)
 # ----------- JWT
 
 # TO-DO: Secret key needs to be actually made secret, get it from enviroment
-app.config['JWT_SECRET_KEY'] = 'cute doggie'
+app.config['JWT_SECRET_KEY'] = os.environ.get('SECRET_KEY', 'SECRET_PLACEHOLDER')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
@@ -94,8 +104,8 @@ app.config['MONGODB_DB'] = 'Minstrel'
 connect(
     'Minstrel'
 )
-#TO-DO: Secret key needs to be secret, move to enviroment
-app.secret_key = 'doggo'
+
+app.secret_key = os.environ.get('SECRET_KEY', 'SECRET_PLACEHOLDER')
 
 # ----------- ROUTES -----------
 
