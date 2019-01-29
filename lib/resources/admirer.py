@@ -81,18 +81,24 @@ class AdmirerRegister(Resource):
     def post(self):
         data = admirer_parser.parse_args()
 
+        errors = {}
         # Calls UserModel to search through all users, not just admirers
         if UserModel.find_by_email(data['email']):
-            return {'message': 'A user with this email already exists'}, 400
+            errors['email'] =  'A user with this email already exists'
         if UserModel.find_by_username(data['username']):
-            return {'message': 'A user with this username already exists'}, 400
+            errors['username'] =  'A user with this username already exists'
+
 
         # Bcrypt hash
         password_hash = generate_password_hash(data['password']).decode('utf-8')
 
-        filter_response = PerformerModel.filter_categories(data['preferred_categories'])
+        filter_response = PerformerModel.filter_categories(data['categories'])
         if filter_response['status'] == 'error':
-            return filter_response
+            errors["categories"] = filter_response['message']
+
+        if errors:
+            errors['status'] = 'error'
+            return errors, 403
 
         admirer = AdmirerModel(data['email'], data['username'], password_hash, filter_response['categories'])
         try:

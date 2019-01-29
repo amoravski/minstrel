@@ -15,7 +15,7 @@ class Performer(Resource):
     def get(self, username):
         performer = PerformerModel.find_by_username(username)
         if not performer:
-            return {'status':'error', 'message':'User is not performer'}
+            return {'status':'error', 'message':'User is not performer'}, 403
         
         json = performer.json()
         performances_titles = []
@@ -32,7 +32,7 @@ class Performer(Resource):
 
         # Check first if performer exists, then check if the requester is this performer
         if not performer or not user == performer.email:
-            return {'status':'error', 'message':'No such performer exists or user is not requested performer'}, 400
+            return {'status':'error', 'message':'No such performer exists or user is not requested performer'}, 403
         
         # Parse args
         data = performer_settings_parser.parse_args()
@@ -41,7 +41,7 @@ class Performer(Resource):
         # Username
         if data['username']:
             if PerformerModel.find_by_username(data['username']):
-                return {'status':'error', 'message':'Username taken'}
+                return {'status':'error', 'message':'Username taken'}, 403
             performer.username = data['username']
             return_message.append('username')
 
@@ -55,7 +55,7 @@ class Performer(Resource):
         if data['categories']:
             filter_response = PerformerModel.filter_categories(data['categories'])
             if filter_response['status'] == 'error':
-                return filter_response
+                return filter_response, 403
             performer.categories = filter_response['categories']
             return_message.append('categories')
 
@@ -71,7 +71,7 @@ class Performer(Resource):
                 if result['status'] == 'ok':
                     performer = result['performer']
                 else:
-                    return result, 400
+                    return result, 403
             return_message.append('settings')
 
         try:
@@ -89,11 +89,12 @@ class PerformerRegister(Resource):
     def post(self):
         data = performer_parser.parse_args()
 
+        errors = {}
         # Calls UserModel to search through all users, not just performers
         if UserModel.find_by_email(data['email']):
-            return {'message': 'A user with this email already exists'}, 400
+            errors['email'] =  'A user with this email already exists'
         if UserModel.find_by_username(data['username']):
-            return {'message': 'A user with this username already exists'}, 400
+            errors['username'] =  'A user with this username already exists'
 
         # Bcrypt hash
         password_hash = generate_password_hash(data['password']).decode('utf-8')
@@ -101,7 +102,11 @@ class PerformerRegister(Resource):
         # Checks if categories are valid
         filter_response = PerformerModel.filter_categories(data['categories'])
         if filter_response['status'] == 'error':
-            return filter_response
+            errors["categories"] = filter_response['message']
+
+        if errors:
+            errors['status'] = 'error'
+            return errors, 403
 
         performer = PerformerModel(data['email'], data['username'], password_hash, data['location'], filter_response['categories'])
 
