@@ -45,6 +45,7 @@ class PerformerModel(UserModel):
             'email': self.email,
             'username': self.username,
             'description': self.description,
+            'location': self.location,
             'performances': self.performances,
             'categories': self.categories
         }

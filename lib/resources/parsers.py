@@ -13,8 +13,6 @@ user_parser.add_argument('email',
                         )
 user_parser.add_argument('username',
                         type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
                         )
 user_parser.add_argument('password',
                         type=str,
@@ -88,7 +86,7 @@ admirer_parser.add_argument('password',
                         required=True,
                         help="This field cannot be left blank!"
                         )
-admirer_parser.add_argument('preferred_categories',
+admirer_parser.add_argument('categories',
                         required=True,
                         help="This field cannot be left blank!",
                         action="append"
