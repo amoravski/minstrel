@@ -12,6 +12,7 @@ mongoengine = "*"
 flask-jwt-extended = "*"
 flask-bcrypt = "*"
 redis = "*"
+flask-cors = "*"
 
 [dev-packages]
 
