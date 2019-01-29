@@ -1,20 +1,26 @@
 from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
 from flask_restful import Api
+from flask_cors import CORS
 from mongoengine import connect
 import datetime
+from flask_jwt_extended import JWTManager 
+import redis
+
 from resources.user import UserLogin, TokenRefresh, UserLogout, RevokeRefreshToken
 from resources.offer import Offer, OfferList
 from resources.performance import Performance, PerformanceList
 from resources.performer import Performer, PerformerRegister, PerformerList
 from resources.admirer import Admirer, AdmirerRegister
-from flask_jwt_extended import JWTManager 
-import redis
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 # ----------- SECURITY ------------
+
+# ----------- CORS
+
+CORS(app)
 
 # ----------- Bcrypt
 
