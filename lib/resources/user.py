@@ -22,7 +22,10 @@ class UserLogin(Resource):
             revoked_store.set(access_jti, 'false')
             revoked_store.set(refresh_jti, 'false')
 
-            return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token}, 200
+            if (user._cls == "UserModel.PerformerModel"):
+                return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token, 'type': "Performer"}, 200
+            else:
+                return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token, 'type': "Admirer"}, 200
         else:
             return {'status': 'error','message': 'invalid email or password'}, 401
 
