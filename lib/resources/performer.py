@@ -108,12 +108,15 @@ class PerformerRegister(Resource):
             errors['status'] = 'error'
             return errors, 403
 
-        performer = PerformerModel(data['email'], data['username'], password_hash, data['location'], filter_response['categories'])
+        provided_location = data['location']
+        result_location = [float(provided_location[0]), float(provided_location[1])]
+
+        performer = PerformerModel(data['email'], data['username'], password_hash, result_location, filter_response['categories'])
 
         try:
             performer.save_to_db()
-        except:
-            return {'status': 'error', 'message': 'Something went wrong'}, 500
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}, 500
 
         return {'status': 'ok','message': 'Performer created successfully.'}, 201
 

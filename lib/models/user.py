@@ -52,7 +52,7 @@ class PerformerModel(UserModel):
 
 
     # Location, stored as lat and lon
-    location = StringField()
+    location = GeoPointField()
 
     # Other properties
     categories = ListField(StringField(max_length=20))

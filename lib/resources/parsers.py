@@ -38,9 +38,9 @@ performer_parser.add_argument('password',
                         help="This field cannot be left blank!"
                         )
 performer_parser.add_argument('location',
-                        type=str,
                         required=True,
-                        help="This field cannot be left blank!"
+                        help="This field cannot be left blank!",
+                        action="append"
                         )
 performer_parser.add_argument('categories',
                         required=True,
