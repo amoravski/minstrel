@@ -24,8 +24,10 @@ class UserLogin(Resource):
 
             if (user._cls == "UserModel.PerformerModel"):
                 return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token, 'type': "Performer"}, 200
-            else:
+            elif (user._cls == "UserModel.AdmirerModel"):
                 return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token, 'type': "Admirer"}, 200
+            elif (user._cls == "UserModel.AdministratorModel"):
+                return {'status': 'ok','access_token': access_token, 'refresh_token': refresh_token, 'type': "Administrator"}, 200
         else:
             return {'status': 'error','message': 'invalid email or password'}, 401
 

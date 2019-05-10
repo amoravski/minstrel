@@ -166,3 +166,18 @@ class AdmirerModel(UserModel):
             'favourites': self.favorites,
             'preferences': self.preferences
         }
+
+    @classmethod
+    def find_all(cls):
+        return cls.objects.all()
+
+class AdministratorModel(UserModel):
+    """
+        Model for administrators - they can do anything
+    """
+    def json(self):
+        """Returns pretty json representation"""
+        return {
+            'email': self.email,
+            'username': self.username,
+        }

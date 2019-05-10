@@ -107,6 +107,19 @@ class AdmirerRegister(Resource):
             return {'status': 'error','message': 'Something went wrong'}, 500
         return {'status': 'ok','message': 'Admirer created successfully.'}, 201
     
+class AdmirerList(Resource):
+    """
+        Resource for getting a list of admirers
+    """
+
+    def get(self):
+        admirers_json = []
+        for admirer in AdmirerModel.find_all():
+            admirer_no_uuids = admirer.json()
+            del admirer_no_uuids['offers']
+            admirers_json.append(admirer_no_uuids)
+        return {'status': 'ok', 'admirers': admirers_json}
+
 def set_setting(admirer, setting, data):
     """
         Function has been moved out for readability, intended only for this module

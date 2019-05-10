@@ -4,7 +4,7 @@ class EventModel(Document):
     """
         The abstract event class
     """
-    
+
     # Common Properties
     uuid = UUIDField()
     title = StringField(required=True, max_length=50)
@@ -84,7 +84,7 @@ class PerformanceModel(EventModel):
 
     collaborators = ListField(StringField())
 
-    def json(self):                                                                           
+    def json(self):
         """Returns pretty json representation"""
         return {
                 'title': self.title,
@@ -93,5 +93,4 @@ class PerformanceModel(EventModel):
                 'location': self.location,
                 'date': self.date,
                 'categories': self.categories,
-                }    
- 
+                }

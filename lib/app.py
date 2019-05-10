@@ -12,7 +12,8 @@ from resources.user import UserLogin, TokenRefresh, UserLogout, RevokeRefreshTok
 from resources.offer import Offer, OfferList
 from resources.performance import Performance, PerformanceList
 from resources.performer import Performer, PerformerRegister, PerformerList
-from resources.admirer import Admirer, AdmirerRegister
+from resources.admirer import Admirer, AdmirerRegister, AdmirerList
+from resources.administrator import AdministratorActions
 
 app = Flask(__name__, static_folder='../front_end/build')
 app.config['PROPAGATE_EXCEPTIONS'] = True
@@ -125,6 +126,8 @@ api.add_resource(PerformanceList, '/performance')
 api.add_resource(Performer, '/performer/<string:username>')
 api.add_resource(PerformerList, '/performer')
 api.add_resource(Admirer, '/admirer/<string:username>')
+api.add_resource(AdmirerList, '/admirer')
+api.add_resource(AdministratorActions, '/admin')
 # ------------ MISC ------------
 
 # Runs app if file is called

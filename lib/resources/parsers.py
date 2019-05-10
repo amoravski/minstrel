@@ -215,3 +215,12 @@ performance_setting_parser.add_argument('date',
                         type=str
                         )
 
+administrator_action_parser = reqparse.RequestParser()
+administrator_action_parser.add_argument('type',
+                        required=True,
+                        help="This field cannot be left blank!",
+                        type=str
+                        )
+administrator_action_parser.add_argument('identifier',
+                        type=str
+                        )
